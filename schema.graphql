@@ -1,0 +1,18 @@
+type Query {
+  histories: [History] @listLength(min: 5, max: 5)
+}
+
+type History {
+  date: String
+    @fake(type: date, options: { dateFrom: "2022-01-01", dateTo: "2022-01-06" })
+  transactions: [Transaction] @listLength(min: 2, max: 5)
+}
+
+type Transaction {
+  id: String @fake(type: uuid)
+  wallet_address: String @fake(type: bitcoinAddress)
+  type: String @fake(type: financeTransactionType)
+  amount: String @fake(type: money, options: { minMoney: 50, maxMoney: 900 })
+  currency: String @fake(type: currencyCode)
+  status: String @examples(values: ["successful", "pending", "failed"])
+}
