@@ -1,20 +1,26 @@
-import React, { useId } from 'react';
+import React, { useState } from 'react';
+import SelectInput from '../../elements/SelectInput';
 
-const Filter = ({ title, options }) => {
-  const id = useId();
+const Filter = ({ title, options, handleFilter }) => {
+  const [formData, setFormData] = useState({
+    [title]: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ [name]: value });
+    handleFilter(name, value);
+  };
+
   return (
     <div className='relative'>
-      <select
-        className='block appearance-none w-full bg-transparent border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm'
-        id='grid-state'
-      >
-        <option value=''>{title.toUpperCase()}</option>
-        {options.map(({ name, value }) => (
-          <option value={value} key={`${id}_${value}`}>
-            {name}
-          </option>
-        ))}
-      </select>
+      <SelectInput
+        onChange={handleInputChange}
+        title={title}
+        name={title}
+        options={options}
+        value={formData[title]}
+      />
       <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
         <svg
           className='fill-current h-4 w-4'
