@@ -25,9 +25,16 @@ function App() {
     }
   };
 
+  const handleSearch = (e) => {
+    let value = e.target.value;
+    let result = [];
+    result = data.transactions.filter((e) => e.wallet_address.includes(value));
+    setTransactions(result);
+  };
+
   return (
     <div className=' mx-auto w-10/12 sm:w-6/12 h-screen pt-10'>
-      <Search />
+      <Search handleSearch={handleSearch} />
       <div className='filter flex flex-row my-7 space-x-4 overflow-x-auto sm:overflow-auto'>
         <Filter
           title='status'
