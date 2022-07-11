@@ -3,30 +3,26 @@ import React, { useState } from 'react';
 import Filter from './components/blocks/Filter/Filter';
 import History from './components/blocks/History';
 import Search from './components/blocks/Search/Search';
-import { statusOptions, typeOptions } from './utils/elementOptions';
 import GET_HISTORIES from './graphQl/histories.queries';
+import { statusOptions, typeOptions } from './utils/elementOptions';
 
 function App() {
   const { loading, error, data } = useQuery(GET_HISTORIES);
-
   const [transactions, setTransactions] = useState([]);
 
   if (loading) return 'Loading...';
   if (error) return 'Something Went Error';
 
   const handleFilter = (filterName, filterValue) => {
-    let test = [];
-    for (let i = 0; i < data.histories.length; i++) {
-      const res = data.histories[i].transactions.filter(
+    setTransactions([]);
+    if (filterValue === '') {
+      return setTransactions(data);
+    } else {
+      const res = data.transactions.filter(
         (e) => e[filterName] === filterValue
       );
-
-      res.map((e) =>
-        test.push({ date: data.histories[i].date, transactions: res })
-      );
+      setTransactions(res);
     }
-
-    return setTransactions(test);
   };
 
   return (
@@ -43,12 +39,10 @@ function App() {
           options={typeOptions}
           handleFilter={handleFilter}
         />
-        {/* <Filter title='type'/>
-        <Filter /> */}
       </div>
       {!loading && !error && (
         <div className='history__container'>
-          <History data={data.histories} filtered={transactions} />
+          <History data={data.transactions} filtered={transactions} />
         </div>
       )}
     </div>
